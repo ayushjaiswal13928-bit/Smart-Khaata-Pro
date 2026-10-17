@@ -5,7 +5,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig(() => ({
-  base: '/Smart-Khaata/',
+  base: '/Smart-Khaata-Pro/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
