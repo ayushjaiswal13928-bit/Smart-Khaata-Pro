@@ -45,23 +45,28 @@ export function PWAInstallButton({ lang, variant = 'button', className = '' }: P
     };
   }, []);
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      // Show instructional guide modal instead of window.alert
-      setShowGuideModal(true);
-      return;
+  
+const handleInstallClick = async () => {
+  if (!deferredPrompt) {
+    console.warn('Native install prompt is not available yet.');
+    return;
+  }
+
+  try {
+    await deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      setIsInstalled(true);
     }
-    try {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setIsInstalled(true);
-      }
-      setDeferredPrompt(null);
-    } catch {
-      setShowGuideModal(true);
-    }
-  };
+
+    setDeferredPrompt(null);
+  } catch (error) {
+    console.error('PWA installation failed:', error);
+  }
+};
+
 
   // If already running in standalone mode, display a subtle installed state or hide in header
   if (isInstalled) {
